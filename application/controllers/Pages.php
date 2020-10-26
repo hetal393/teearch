@@ -6,7 +6,7 @@ class Pages extends CI_Controller{
 			show_404();
 		}
 
-
+		$this->load->database();
 		$data['title'] = ucfirst($page);
 		$data['testimonials'] = $this->testimonials_model->get_Testimonials();
 		// print_r($data['testimonials']);
@@ -20,8 +20,16 @@ class Pages extends CI_Controller{
 		$this->load->view('pages/portfolioDetails');
 	}
 
-	public function openContactModal(){
-		$this->load->view('pages/contactModal');
+	public function ajaxRequestPost(){
+
+
+		    $data = array(
+			'Name' => $this->input->post('name'),
+			'email' => $this->input->post('email'),
+			'message' => $this->input->post('message')
+		);
+
+		return $this->db->insert('contact', $data);
 	}
 }
  ?>

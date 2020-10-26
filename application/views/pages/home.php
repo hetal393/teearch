@@ -177,9 +177,9 @@
             <div class="col-lg-4 col-md-6 portfolio-item filter-resi">
               <img src="assets/img/portfolio/agarwal-hospital.png" class="img-fluid card-size" alt="">
               <div class="portfolio-info">
-                <h4>App 1</h4>
-                <p>App</p>
-                <a href="assets/img/portfolio/agarwal-hospital.png" data-gall="portfolioGallery" class="venobox preview-link" title="App 1"><i class="fa fa-plus"></i></a>
+                <h4>Agarwal Hospital</h4>
+                <p>Malad West</p>
+                <a href="assets/img/portfolio/agarwal-hospital.png" data-gall="portfolioGallery" class="venobox preview-link" title="Agarwal Hospital"><i class="fa fa-plus"></i></a>
                 <a href="<?php echo base_url();?>portfolioDetails" class="details-link" title="More Details"><i class="fa fa-link fa-flip-horizontal"></i></a>
               </div>
             </div>
@@ -391,9 +391,9 @@
                 <p>
                   E: eversmilehetal@gmail.com
                 </p>
-                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#contactMe">Contact</button> -->
-                <a type="button" class="btn btn-primary" href="<?php echo base_url(); ?>contactModal"
-                >Contact</a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#contactMe" onclick="openModal()">Contact</button>
+                <!-- <a type="button" class="btn btn-primary" href="<?php echo base_url(); ?>contactModal"
+                >Contact</a> -->
               </div>
               <div class="col">
                 <p>
@@ -409,7 +409,7 @@
                   If you would like to apply for a position, please forward your CV and portfolio  (file size under 10mb) by email to <br>
                   <a href="" target="_blank">careers@teearch.com</a>
                 </p>
-                <button type="button" class="btn btn-primary">Apply</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#careerModal" onclick="openCareerModal()">Apply</button>
               </div>
             <!-- </div> -->
           </div>
@@ -450,6 +450,136 @@
 
     <!-- Template Main JS File -->
     <script src="assets/js/main.js"></script>
+
+    <script type="text/javascript">
+
+      function openModal(){
+        $("#contactMe").modal("show");
+        document.getElementById("contactForm").reset();
+      }
+
+      function openCareerModal(){
+        $("#careerModal").modal("show");
+        document.getElementById("careerForm").reset();
+      }
+
+      function sendMessage()
+      {
+          $('#sendMsg').text('sending...'); //change button text
+          $('#sendMsg').attr('disabled',true); //set button disable 
+                 var name = $("input[name='name']").val();
+
+       var email = $("input[name='email']").val();
+       var message = $("textarea[name='message']").val();
+          
+       
+          // ajax adding data to database
+          $.ajax({
+              url : '/ajax-requestPost',
+              type: "POST",
+              data: {name: name, email: email, message:message},
+              success: function(data)
+              {
+       
+                  if(data.status) //if success close modal and reload ajax table
+                  {
+                      redirect(base_url());
+                  }
+                  else
+                  {
+                      for (var i = 0; i < data.inputerror.length; i++) 
+                      {
+                          $('[name="'+data.inputerror[i]+'"]').parent().parent().addClass('has-error'); //select parent twice to select div form-group class and add has-error class
+                          $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]); //select span help-block class set text error string
+                      }
+                  }
+                  $('#sendMsg').text('save'); //change button text
+                  $('#sendMsg').attr('disabled',false); //set button enable 
+       
+       
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  alert(textStatus,errorThrown);
+                  $('#sendMsg').text('save'); //change button text
+                  $('#sendMsg').attr('disabled',false); //set button enable 
+       
+              }
+          });
+      }
+    </script>
+
+    <!-- Start Contact Modal -->
+    <div class="modal fade" id="contactMe" tabindex="-1" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Reach Us ! </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="#" id="contactForm" >
+              <div class="form-group">
+                <label class="col-form-label">Name:</label>
+                <input type="text" name="name" class="form-control">
+                <span class="help-block"></span>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label">Email:</label>
+                <input type="text" name="email" class="form-control">
+                <span class="help-block"></span>
+              </div>
+              <div class="form-group">
+                <label class="col-form-label">Message:</label>
+                <textarea class="form-control" name="message"></textarea>
+                <span class="help-block"></span>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="sendMsg" onclick="sendMessage()">Send message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Contact Modal -->
+
+
+    <!-- Start Career Modal -->
+    <div class="modal fade" id="careerModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Apply to us ! </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="#" id="careerForm" >
+              <div class="form-group">
+                <label class="col-form-label">Name:</label>
+                <input type="text" name="name" class="form-control">
+                <span class="help-block"></span>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="validatedCustomFile" required>
+                <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                <div class="invalid-feedback">Example invalid custom file feedback</div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="sendMsg" onclick="upload()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Career Modal -->
 
   </body>
 </html>
